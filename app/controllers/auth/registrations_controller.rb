@@ -1,4 +1,6 @@
 class Auth::RegistrationsController < ApplicationController
+  skip_before_action :authenticate_user, only: :create
+
   def create
     user = User.create!(user_params)
     token = Auth::JwtService.encode(user_id: user.id)

@@ -1,5 +1,5 @@
 class Auth::SessionsController < ApplicationController
-  skip_before_action :authenticate_user!, only: :create
+  skip_before_action :authenticate_user, only: :create
 
   def create
     normalized_credentials = {
