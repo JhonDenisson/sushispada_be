@@ -1,17 +1,28 @@
 class ApplicationController < ActionController::API
-  include Pundit
+  include Pundit::Authorization
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
-  before_action :authenticate_user!
+  before_action :authenticate_user
 
   private
+  def user_not_authorized
+    render json: { error: "Forbidden" }, status: :forbidden
+  end
 
-  def authenticate_user!
-    header = request.headers['Authorization']
-    token = header.split(' ').last if header
-    payload = Auth::JwtService.decode(token)
+  def authenticate_user
+    header = request.headers["Authorization"]
+    token = header.split(" ").last if header
 
-    @current_user = User.find_by(id: payload[:user_id]) if payload
-    render json: { error: 'Unauthorized'}, status: :unauthorized unless @current_user
+    return render json: { error: "Missing token" }, status: :unauthorized unless token
+
+    begin
+      decoded = Auth::JwtService.decode(token)
+      @current_user = User.find_by(id: decoded[:user_id])
+    rescue JWT::ExpiredSignature
+      render json: { error: "Expired token" }, status: :unauthorized
+    rescue JWT::DecodeError
+      render json: { error: "Invalid token" }, status: :unauthorized
+    end
   end
 
   def current_user

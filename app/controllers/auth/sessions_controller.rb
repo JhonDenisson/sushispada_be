@@ -8,14 +8,15 @@ class Auth::SessionsController < ApplicationController
     }
 
     if normalized_credentials.values.any?(&:blank?)
-      return render json: { error: "Email and password are required" }, status: :bad_request
+      return render json: { error: 'Email and password are required' }, status: :bad_request
     end
 
     user = User.find_by(email: normalized_credentials[:email])
-    return render json: { error: "User not found" }, status: :not_found unless user
+
+    return render json: { error: 'User not found' }, status: :not_found unless user
 
     unless user.authenticate(normalized_credentials[:password])
-      return render json: { error: "Invalid credentials" }, status: :unauthorized
+      return render json: { error: 'Invalid credentials' }, status: :unauthorized
     end
 
     token = Auth::JwtService.encode(user_id: user.id)
