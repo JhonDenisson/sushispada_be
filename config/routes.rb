@@ -5,20 +5,21 @@ Rails.application.routes.draw do
   end
 
   namespace :customers do
-    resources :categories, only: [:index]
-    resources :products, only: [:index, :show]
+    resources :categories, only: [ :index ]
+    resources :products, only: [ :index, :show ]
+
+    resources :addresses, only: [ :index, :show, :create, :update, :destroy ]
+
+    resources :orders, only: [ :create, :show ] do
+      post :checkout, on: :member
+    end
   end
 
   namespace :admin do
     resources :categories
     resources :products
   end
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
+  # Health check
   get "up" => "rails/health#show", as: :rails_health_check
-
-  # Defines the root path route ("/")
-  # root "posts#index"
 end

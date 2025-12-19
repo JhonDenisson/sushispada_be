@@ -3,7 +3,7 @@ class Auth::SessionsController < ApplicationController
 
   def create
     normalized_credentials = {
-      email: credentials_params[:email].to_s.strip.downcase,
+      username: credentials_params[:username].to_s.strip.downcase,
       password: credentials_params[:password].to_s
     }
 
@@ -11,7 +11,7 @@ class Auth::SessionsController < ApplicationController
       return render json: { error: 'Email and password are required' }, status: :bad_request
     end
 
-    user = User.find_by(email: normalized_credentials[:email])
+    user = User.find_by(email: normalized_credentials[:username])
 
     return render json: { error: 'User not found' }, status: :not_found unless user
 
@@ -20,12 +20,12 @@ class Auth::SessionsController < ApplicationController
     end
 
     token = Auth::JwtService.encode(user_id: user.id)
-    render json: { token: token }, status: :created
+    render json: { access_token: token }, status: :created
   end
 
   private
 
   def credentials_params
-    params.permit(:email, :password)
+    params.permit(:username, :password)
   end
 end

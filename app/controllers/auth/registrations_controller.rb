@@ -2,10 +2,14 @@ class Auth::RegistrationsController < ApplicationController
   skip_before_action :authenticate_user, only: :create
 
   def create
+    user = User.find_by(email: user_params[:email])
+
+    return render json: { error: "Email and password are required" }, status: :bad_request if user_params[:email].blank? || user_params[:password].blank?
+    return render json: { error: "Email already registered" }, status: :not_found if user.present?
+
     user = User.create!(user_params)
     token = Auth::JwtService.encode(user_id: user.id)
-
-    render json: { token: token }, status: :created
+    render json: { access_token: token }, status: :created
   end
 
   private
