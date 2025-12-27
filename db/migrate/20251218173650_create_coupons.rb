@@ -7,7 +7,7 @@ class CreateCoupons < ActiveRecord::Migration[8.1]
       t.integer :min_subtotal_cents
       t.datetime :starts_at
       t.datetime :ends_at
-      t.boolean :active
+      t.boolean :active, default: true
 
       t.timestamps
     end
