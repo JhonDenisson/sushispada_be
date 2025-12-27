@@ -1,10 +1,22 @@
 module Admin
   class CategoriesController < ApplicationController
-    before_action :set_category, only: [:show, :update, :destroy]
+    before_action :set_category, only: [ :show, :update, :destroy ]
 
     def index
-      categories = policy_scope(Category).order(:position)
-      render json: CategorySerializer.render(categories, view: :admin)
+      categories = policy_scope(Category)
+                     .order(:position)
+                     .page(params[:page])
+                     .per(params[:per_page] || 20)
+
+      render json: {
+        data: CategorySerializer.render_as_hash(categories, view: :admin),
+        meta: {
+          current_page: categories.current_page,
+          total_pages: categories.total_pages,
+          total_count: categories.total_count,
+          per_page: categories.limit_value
+        }
+      }
     end
 
     def show
@@ -12,8 +24,6 @@ module Admin
     end
 
     def create
-      return render json: { error: 'Category parameters are required' }, status: :bad_request if category_params.blank?
-      
       category = Category.new(category_params)
       authorize category
 
@@ -45,7 +55,7 @@ module Admin
     end
 
     def category_params
-      params.require(:category).permit(:name, :position, :active)
+      params.require(:category).permit(:name, :position)
     end
   end
 end
