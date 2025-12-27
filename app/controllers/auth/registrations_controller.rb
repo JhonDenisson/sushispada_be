@@ -9,7 +9,7 @@ class Auth::RegistrationsController < ApplicationController
 
     user = User.create!(user_params)
     token = Auth::JwtService.encode(user_id: user.id)
-    render json: { access_token: token }, status: :created
+    render json: { access_token: token, expires_in: 24.hours.seconds.to_i }, status: :created
   end
 
   private

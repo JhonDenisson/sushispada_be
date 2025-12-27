@@ -3,20 +3,8 @@ module Admin
     before_action :set_category, only: [ :show, :update, :destroy ]
 
     def index
-      categories = policy_scope(Category)
-                     .order(:position)
-                     .page(params[:page])
-                     .per(params[:per_page] || 20)
-
-      render json: {
-        data: CategorySerializer.render_as_hash(categories, view: :admin),
-        meta: {
-          current_page: categories.current_page,
-          total_pages: categories.total_pages,
-          total_count: categories.total_count,
-          per_page: categories.limit_value
-        }
-      }
+      categories = policy_scope(Category).order(:position)
+      render json: CategorySerializer.render(categories, view: :admin)
     end
 
     def show

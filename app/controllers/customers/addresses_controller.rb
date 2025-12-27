@@ -1,6 +1,6 @@
 module Customers
   class AddressesController < ApplicationController
-    before_action :set_address, only: [:show, :update, :destroy]
+    before_action :set_address, only: [ :show, :update, :destroy ]
 
     def index
       addresses = policy_scope(Address)
@@ -30,7 +30,6 @@ module Customers
       end
     end
 
-    # DELETE /customers/addresses/:id
     def destroy
       @address.soft_delete!
       head :no_content
