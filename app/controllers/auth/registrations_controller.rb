@@ -9,7 +9,16 @@ class Auth::RegistrationsController < ApplicationController
 
     user = User.create!(user_params)
     token = Auth::JwtService.encode(user_id: user.id)
-    render json: { access_token: token, expires_in: 24.hours.seconds.to_i }, status: :created
+
+    cookies[:access_token] = {
+      value: token,
+      httponly: true,
+      secure: Rails.env.production?,
+      same_site: :lax,
+      expires: 24.hours.from_now
+    }
+
+    render json: { expires_in: 24.hours.seconds.to_i }, status: :created
   end
 
   private

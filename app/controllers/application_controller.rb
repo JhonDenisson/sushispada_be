@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::API
+  include ActionController::Cookies
   include Pundit::Authorization
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
@@ -11,7 +12,7 @@ class ApplicationController < ActionController::API
 
   def authenticate_user
     header = request.headers["Authorization"]
-    token = header.split(" ").last if header
+    token = cookies[:access_token]
 
     return render json: { error: "Missing token" }, status: :unauthorized unless token
 
