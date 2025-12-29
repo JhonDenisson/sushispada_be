@@ -1,4 +1,4 @@
-class Auth::JwtService
+class Auth::JWTService
   SECRET = Rails.application.credentials.secret_key_base
 
   def self.encode(payload, exp = 24.hours.from_now)

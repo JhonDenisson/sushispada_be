@@ -8,7 +8,8 @@ class Auth::RegistrationsController < ApplicationController
     return render json: { error: "Email already registered" }, status: :not_found if user.present?
 
     user = User.create!(user_params)
-    token = Auth::JwtService.encode(user_id: user.id)
+    token = Auth::JWTService.encode(user_id: user.id)
+
 
     cookies[:access_token] = {
       value: token,
