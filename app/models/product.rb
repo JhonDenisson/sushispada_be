@@ -6,5 +6,4 @@ class Product < ApplicationRecord
 
   scope :active, -> { where(active: true) }
   scope :category, ->(category_id) { where(category_id: category_id) }
-
 end

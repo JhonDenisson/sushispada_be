@@ -6,8 +6,8 @@ module Orders
       @quantity = quantity.to_i
     end
     def call
-      raise 'Order is not draft' unless @order.draft?
-      raise 'Invalid quantity' if @quantity <= 0
+      raise "Order is not draft" unless @order.draft?
+      raise "Invalid quantity" if @quantity <= 0
 
       item = @order.order_items.find_by(product_id: @product.id)
 

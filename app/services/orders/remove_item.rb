@@ -5,7 +5,7 @@ module Orders
     end
 
     def call
-      raise 'Order is not draft' unless @order_item.order.draft?
+      raise "Order is not draft" unless @order_item.order.draft?
 
       OrderItem.transaction do
         order = @order_item.order

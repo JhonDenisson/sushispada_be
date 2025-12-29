@@ -11,7 +11,7 @@ Rails.application.routes.draw do
     resources :addresses, only: [ :index, :show, :create, :update, :destroy ]
 
     resources :orders, only: [ :create, :show ] do
-      resources :order_items, only: [:create, :update, :destroy]
+      resources :order_items, only: [ :create, :update, :destroy ]
       post :checkout, on: :member
     end
   end
@@ -21,7 +21,7 @@ Rails.application.routes.draw do
     resources :products
     # resources :delivery_zones
     # resources :coupons
-    resources :orders, only: [:index, :update]
+    resources :orders, only: [ :index, :update ]
   end
 
   # Health check

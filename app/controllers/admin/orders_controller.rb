@@ -1,6 +1,6 @@
 module Admin
   class OrdersController < ApplicationController
-    before_action :set_order, only: [ :show ]
+    before_action :set_order, only: [ :show, :update ]
 
     def index
       orders = OrdersQuery.new(policy_scope(Order), params).call
@@ -24,6 +24,14 @@ module Admin
       render json: OrderSerializer.render(@order)
     end
 
+    def update
+      if @order.update(order_params)
+        render json: OrderSerializer.render(@order)
+      else
+        render json: { errors: @order.errors.full_messages }, status: :unprocessable_entity
+      end
+    end
+
     private
 
     def set_order
@@ -36,4 +44,3 @@ module Admin
     end
   end
 end
-

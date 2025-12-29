@@ -18,7 +18,7 @@ module Customers
 
       Orders::Checkout.new(order: order, params: checkout_params).call
 
-      head :no_content
+      render json: OrderSerializer.render(order.reload)
     end
 
     private

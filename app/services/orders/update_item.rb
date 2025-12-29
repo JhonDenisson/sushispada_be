@@ -6,8 +6,8 @@ module Orders
     end
 
     def call
-      raise 'Order is not draft' unless @order_item.order.draft?
-      raise 'Invalid quantity' if @quantity <= 0
+      raise "Order is not draft" unless @order_item.order.draft?
+      raise "Invalid quantity" if @quantity <= 0
 
       OrderItem.transaction do
         @order_item.update!(quantity: @quantity)

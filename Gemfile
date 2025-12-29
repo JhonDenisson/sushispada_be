@@ -30,17 +30,17 @@ gem "thruster", require: false
 gem "image_processing", "~> 1.2"
 
 # Auth
-gem 'bcrypt'
-gem 'jwt'
+gem "bcrypt"
+gem "jwt"
 
 # Authorization
-gem 'pundit'
+gem "pundit"
 
 # Serializers
-gem 'blueprinter'
+gem "blueprinter"
 
 # Pagination
-gem 'kaminari'
+gem "kaminari"
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 # gem "rack-cors"

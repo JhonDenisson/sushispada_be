@@ -38,6 +38,7 @@ module Orders
       @order.placed_at = Time.current
       @order.status = :placed
       @order.recalculate_totals!
+      @order.save!
     end
 
     def clear_delivery_snapshot!
