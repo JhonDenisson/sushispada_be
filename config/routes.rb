@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     resources :addresses, only: [ :index, :show, :create, :update, :destroy ]
 
     resources :orders, only: [ :create, :show ] do
+      resources :order_items, only: [:create, :update, :destroy]
       post :checkout, on: :member
     end
   end

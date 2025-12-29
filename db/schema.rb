@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_18_170524) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_18_173718) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -31,11 +31,24 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_18_170524) do
   end
 
   create_table "categories", force: :cascade do |t|
-    t.boolean "active"
+    t.boolean "active", default: true
     t.datetime "created_at", null: false
     t.string "name"
     t.integer "position"
     t.datetime "updated_at", null: false
+  end
+
+  create_table "coupons", force: :cascade do |t|
+    t.boolean "active", default: true
+    t.string "code"
+    t.datetime "created_at", null: false
+    t.datetime "ends_at"
+    t.integer "kind"
+    t.integer "min_subtotal_cents"
+    t.datetime "starts_at"
+    t.datetime "updated_at", null: false
+    t.integer "value"
+    t.index ["code"], name: "index_coupons_on_code", unique: true
   end
 
   create_table "delivery_zones", force: :cascade do |t|
@@ -47,6 +60,15 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_18_170524) do
     t.datetime "updated_at", null: false
     t.index ["active"], name: "index_delivery_zones_on_active"
     t.index ["neighborhood"], name: "index_delivery_zones_on_neighborhood", unique: true
+  end
+
+  create_table "order_coupons", force: :cascade do |t|
+    t.bigint "coupon_id", null: false
+    t.datetime "created_at", null: false
+    t.bigint "order_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["coupon_id"], name: "index_order_coupons_on_coupon_id"
+    t.index ["order_id"], name: "index_order_coupons_on_order_id"
   end
 
   create_table "order_items", force: :cascade do |t|
@@ -87,7 +109,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_18_170524) do
   end
 
   create_table "products", force: :cascade do |t|
-    t.boolean "active"
+    t.boolean "active", default: true
     t.bigint "category_id", null: false
     t.datetime "created_at", null: false
     t.text "description"
@@ -109,6 +131,8 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_18_170524) do
   end
 
   add_foreign_key "addresses", "users"
+  add_foreign_key "order_coupons", "coupons"
+  add_foreign_key "order_coupons", "orders"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"
   add_foreign_key "orders", "addresses"

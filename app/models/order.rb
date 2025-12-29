@@ -6,11 +6,12 @@ class Order < ApplicationRecord
   has_many :order_coupons, dependent: :destroy
   has_many :coupons, through: :order_coupons
 
-  enum :status, %i[draft placed preparing out_for_delivery delivered cancelled]
-  enum :delivery_type, %i[delivery pickup]
-  enum :payment_method, %i[pix cash credit debit]
+  enum :status, { draft: 0, placed: 1, preparing: 2, out_for_delivery: 3, delivered: 4, cancelled: 5 }
+  enum :delivery_type, { delivery: 0, pickup: 1 }
+  enum :payment_method, { pix: 0, cash: 1, credit: 2, debit: 3 }
 
   validates :subtotal_cents, :delivery_fee_cents, :discount_cents, :total_cents, numericality: { greater_than_or_equal_to: 0 }
+  validate :must_have_items, unless: :draft?
 
   scope :drafts, -> { where(status: :draft) }
   scope :status, ->(status) { where(status: status) }
@@ -31,5 +32,13 @@ class Order < ApplicationRecord
     self.subtotal_cents = order_items.sum(:total_price_cents)
     self.total_cents = subtotal_cents + (delivery_fee_cents || 0) - (discount_cents || 0)
     save!
+  end
+
+  private
+
+  def must_have_items
+    return if order_items.exists?
+
+    errors.add(:base, "Order must have at least one item")
   end
 end

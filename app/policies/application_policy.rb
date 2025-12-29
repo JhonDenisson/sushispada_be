@@ -23,4 +23,10 @@ class ApplicationPolicy
       scope.none
     end
   end
+
+  private
+
+  def owner?
+    record.user_id == user.id
+  end
 end

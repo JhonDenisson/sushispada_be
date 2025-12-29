@@ -19,12 +19,6 @@ class AddressPolicy < ApplicationPolicy
     owner?
   end
 
-  private
-
-  def owner?
-    record.user_id == user.id
-  end
-
   class Scope < ApplicationPolicy::Scope
     def resolve
       scope.where(user: user).active

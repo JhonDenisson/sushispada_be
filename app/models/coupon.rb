@@ -2,7 +2,7 @@ class Coupon < ApplicationRecord
   has_many :order_coupons, dependent: :destroy
   has_many :orders, through: :order_coupons
 
-  enum :kind, %i[percent fixed]
+  enum :kind, { percent: 0, fixed: 1 }
 
   validates :code, presence: true, uniqueness: { case_sensitive: false }
   validates :value, presence: true, numericality: { greater_than: 0 }
