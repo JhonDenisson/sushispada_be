@@ -36,8 +36,8 @@ module Admin
     end
 
     def update
-      if @product.update(category_params)
-        render json: CategorySerializer.render(@product)
+      if @product.update(product_params)
+        render json: ProductSerializer.render(@product)
       else
         render json: { errors: @product.errors.full_messages }, status: :unprocessable_entity
       end
