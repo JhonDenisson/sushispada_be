@@ -19,7 +19,7 @@ class Auth::SessionsController < ApplicationController
       return render json: { error: "Invalid credentials" }, status: :unauthorized
     end
 
-    token = Auth::JwtService.encode(user_id: user.id)
+    token = Auth::JWTService.encode(user_id: user.id)
 
     cookies[:access_token] = {
       value: token,

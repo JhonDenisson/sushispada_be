@@ -11,13 +11,12 @@ class ApplicationController < ActionController::API
   end
 
   def authenticate_user
-    header = request.headers["Authorization"]
     token = cookies[:access_token]
 
     return render json: { error: "Missing token" }, status: :unauthorized unless token
 
     begin
-      decoded = Auth::JwtService.decode(token)
+      decoded = Auth::JWTService.decode(token)
       @current_user = User.find_by(id: decoded[:user_id])
     rescue JWT::ExpiredSignature
       render json: { error: "Expired token" }, status: :unauthorized
