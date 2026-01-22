@@ -1,7 +1,7 @@
 module Customers
   class ProductsController < ApplicationController
     def index
-      products = ProductsQuery.new(policy_scope(Product), params).call
+      products = ProductsQuery.new(policy_scope(Product).includes(:category), params).call
                               .order(:created_at)
                               .page(params[:page])
                               .per(params[:per_page] || 20)

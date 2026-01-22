@@ -5,6 +5,6 @@ class ProductSerializer < Blueprinter::Base
   association :category, blueprint: CategorySerializer, view: :minimal
 
   view :admin do
-    fields  :created_at, :updated_at
+    fields :created_at, :updated_at
   end
 end

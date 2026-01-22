@@ -29,7 +29,24 @@ class Auth::SessionsController < ApplicationController
       expires: 24.hours.from_now
     }
 
-    render json: { expires_in: 24.hours.seconds.to_i }, status: :created
+    cookies[:user_role] = {
+      value: user.role,
+      httponly: true,
+      secure: Rails.env.production?,
+      same_site: :lax,
+      expires: 24.hours.from_now
+    }
+
+    render json: {
+      user: UserSerializer.render_as_hash(user),
+      expires_in: 24.hours.to_i
+    }, status: :created
+  end
+
+  def destroy
+    cookies.delete(:access_token)
+    cookies.delete(:user_role)
+    head :no_content
   end
 
   private
