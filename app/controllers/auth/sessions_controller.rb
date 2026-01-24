@@ -16,7 +16,7 @@ class Auth::SessionsController < ApplicationController
     return render json: { error: "User not found" }, status: :not_found unless user
 
     unless user.authenticate(normalized_credentials[:password])
-      return render json: { error: "Invalid credentials" }, status: :unauthorized
+      return render json: { error: "Invalid credentials" }, status: :not_found
     end
 
     token = Auth::JWTService.encode(user_id: user.id)
